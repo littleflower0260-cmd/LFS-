@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Digital School — Premium</title>
+<meta name="theme-color" content="#6d28d9"/>
+<link rel="icon" href="data:,">
+<style>
+/* ============ THEME ============ */
+:root{
+  --bg: #0b1220;             /* dark default */
+  --bg-soft:#101a30;
+  --bg-card:#131f39;
+  --text:#e8eef7;
+  --text-dim:#a9b6cc;
+  --muted:#9fb1c7;
+  --border:#1d2a45;
+  --primary:#7c3aed;        /* purple */
+  --primary-2:#2563eb;      /* blue */
+  --grad: linear-gradient(135deg,var(--primary),var(--primary-2));
+  --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+  --shadow: 0 10px 30px rgba(2,6,23,.35);
+}
+[data-theme="light"]{
+  --bg:#f5f7fb;
+  --bg-soft:#eef2ff;
+  --bg-card:#ffffff;
+  --text:#0f172a;
+  --text-dim:#415577;
+  --muted:#6b7280;
+  --border:#e6e8f0;
+  --shadow: 0 10px 30px rgba(2,6,23,.08);
+}
+
+/* ============ RESET ============ */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Arial}
+a{color:inherit;text-decoration:none}
+button,.btn{cursor:pointer}
+
+/* ============ APP CHROME ============ */
+.appbar{
+  position:sticky; top:0; z-index:50;
+  background:var(--grad); color:#fff;
+  padding:14px 16px; display:flex; align-items:center; gap:12px;
+  box-shadow: var(--shadow);
+}
+.hamburger{background:rgba(255,255,255,.16); border:0; border-radius:12px; width:42px; height:42px; display:grid; place-items:center; font-size:20px}
+.brand{display:flex; align-items:center; gap:10px}
+.brand-logo{
+  width:42px; height:42px; border-radius:12px; background:#fff; display:grid; place-items:center;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.06);
+}
+.brand h1{font-size:18px; margin:0; line-height:1}
+.grow{flex:1}
+.theme-dot{width:36px; height:36px; border-radius:8px; border:none; background:rgba(255,255,255,.18); color:#fff}
+.user-tag{padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.16); font-size:12px}
+
+/* ============ DRAWER ============ */
+.drawer{position:fixed; inset:0 auto 0 0; width:320px; max-width:85vw; transform:translateX(-110%); transition:.25s; z-index:60}
+.drawer.open{transform:translateX(0)}
+.drawer .panel{
+  height:100%; background:var(--bg-card); border-right:1px solid var(--border); box-shadow:var(--shadow); display:flex; flex-direction:column;
+}
+.menu-head{padding:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px}
+.menu-items{padding:10px; overflow:auto; flex:1}
+.menu-items button{width:100%; text-align:left; padding:12px 12px; border:0; border-radius:12px; color:var(--text); background:transparent; display:flex; gap:10px; align-items:center}
+.menu-items button:hover{background:rgba(99,102,241,.12)}
+.menu-foot{padding:12px; border-top:1px solid var(--border); color:var(--text-dim); font-size:12px}
+
+/* ============ LAYOUT ============ */
+.container{max-width:1200px; margin:16px auto; padding:0 12px}
+.hero{background:var(--grad); color:#fff; padding:22px; border-radius:16px; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:space-between; gap:10px}
+.hero h2{margin:0}
+.hero .actions{display:flex; gap:10px; flex-wrap:wrap}
+.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:14px; margin-top:14px}
+.card{
+  background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:var(--shadow);
+  animation: pop .25s ease;
+}
+@keyframes pop{from{transform:translateY(6px); opacity:.0} to{transform:none; opacity:1}}
+.span-12{grid-column:span 12}
+.span-8{grid-column:span 8}
+.span-6{grid-column:span 6}
+.span-4{grid-column:span 4}
+.span-3{grid-column:span 3}
+@media(max-width:980px){.span-8{grid-column:span 12}.span-6{grid-column:span 12}.span-4{grid-column:span 12}.span-3{grid-column:span 6}}
+@media(max-width:560px){.span-3{grid-column:span 12}}
+
+.row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.right{margin-left:auto}
+
+h2,h3{margin:6px 0 10px}
+.muted{color:var(--text-dim)}
+.small{font-size:12px}
+.badge{padding:4px 8px; border-radius:999px; font-size:12px; border:1px solid var(--border); background:rgba(99,102,241,.12)}
+.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(250,250,255,.06);border:1px solid var(--border)}
+.kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:12px; padding:2px 6px; border-radius:6px; border:1px solid var(--border); background:var(--bg-soft)}
+
+.btn{border:0; padding:10px 12px; border-radius:12px; background:var(--grad); color:#fff; box-shadow:var(--shadow)}
+.btn.soft{background:var(--bg-soft); color:var(--text)}
+.btn.outline{background:transparent; color:var(--text); border:1px solid var(--border)}
+.icon-btn{border:1px solid var(--border); background:transparent; border-radius:10px; padding:8px}
+
+input,select,textarea{
+  width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--border);
+  background:transparent; color:var(--text)
+}
+textarea{min-height:84px; resize:vertical}
+
+table{width:100%; border-collapse:collapse}
+th,td{padding:10px; border-bottom:1px solid var(--border); text-align:left}
+th{color:var(--text-dim); font-weight:600}
+
+/* calendar */
+.calendar{display:grid; grid-template-columns:repeat(7,1fr); gap:8px}
+.day{min-height:92px; border:1px solid var(--border); border-radius:12px; padding:8px; background:var(--bg-card)}
+.date-num{font-weight:700}
+.ev{margin-top:6px; font-size:12px; padding:4px 6px; border-radius:8px}
+.ev.holiday{background:#064e3b20; color:#34d399; border:1px solid #065f46}
+.ev.exam{background:#7f1d1d20; color:#fca5a5; border:1px solid #9f1239}
+.ev.activity{background:#92400e20; color:#fbbf24; border:1px solid #92400e}
+
+/* chips */
+.ok{color:var(--ok); font-weight:700}
+.warn{color:var(--warn); font-weight:700}
+.danger{color:var(--danger); font-weight:700}
+
+/* overlay (modals / date pickers) */
+.overlay{position:fixed; inset:0; background:rgba(4,7,20,.6); display:none; align-items:center; justify-content:center; z-index:70}
+.overlay.open{display:flex}
+.modal{background:var(--bg-card); border:1px solid var(--border); padding:14px; border-radius:16px; width:min(620px,92vw); box-shadow:var(--shadow)}
+.modal h3{margin:0 0 8px}
+
+/* back button floating */
+.backbar{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+.backbtn{border:0; background:var(--bg-soft); color:var(--text); border-radius:10px; padding:8px 10px}
+
+/* hide/show helper */
+.hidden{display:none !important}
+
+/* premium micro transitions */
+.fade{animation:fade .28s ease}
+@keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+.scale-in{animation:scale .2s ease}
+@keyframes scale{from{opacity:0; transform:scale(.98)} to{opacity:1; transform:scale(1)}}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- APP BAR -->
+<header class="appbar">
+  <button id="btnMenu" class="hamburger" aria-label="Menu">☰</button>
+  <div class="brand">
+    <div id="logoBox" class="brand-logo">
+      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs>
+        <circle cx="12" cy="8" r="5" fill="url(#g1)"/>
+        <rect x="5" y="15" width="14" height="6" rx="3" fill="#111827"/>
+      </svg>
+    </div>
+    <div>
+      <h1 id="schoolName">Little Flower School</h1>
+      <div class="small" style="opacity:.9">Digital School · Premium</div>
+    </div>
+  </div>
+  <div class="grow"></div>
+  <span id="roleChip" class="user-tag">Guest</span>
+  <button id="btnTheme" class="theme-dot" title="Theme">🌓</button>
+</header>
+
+<!-- SIDE DRAWER -->
+<aside id="drawer" class="drawer" aria-hidden="true">
+  <div class="panel">
+    <div class="menu-head">
+      <strong>Quick Shortcuts</strong>
+      <button id="btnCloseDrawer" class="icon-btn right">✕</button>
+    </div>
+    <div class="menu-items" id="menuItems">
+      <!-- filled by JS according to role -->
+    </div>
+    <div class="menu-foot">
+      <div>About this app</div>
+      <div class="small" style="margin-top:4px">Developed by <b>Shubham Arun Hajare</b><br/>Contact: <span class="kbd">9022761401</span></div>
+    </div>
+  </div>
+</aside>
+
+<!-- OVERLAYS -->
+<div id="overlay" class="overlay" role="dialog" aria-modal="true">
+  <div id="modal" class="modal scale-in"></div>
+</div>
+
+<!-- MAIN -->
+<main class="container" id="appRoot">
+
+  <!-- HOME -->
+  <section id="screen-home" class="fade">
+    <div class="hero">
+      <div>
+        <div class="small">Welcome</div>
+        <h2>Welcome in Digital School</h2>
+        <div class="small">One portal for Students · Teachers · Admin</div>
+      </div>
+      <div class="actions">
+        <button id="goLoginTop" class="btn">🔐 Login</button>
+        <button id="goCalendarTop" class="btn outline">📅 Calendar</button>
+        <button id="goGalleryTop" class="btn outline">🖼️ Gallery</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LOGIN focus card -->
+      <div class="card span-12">
+        <div class="row">
+          <h3 style="margin:0">Start here — Login</h3>
+          <span class="badge">Admin / Teacher / Student</span>
+          <button data-goto="login" class="btn right">Open Login</button>
+        </div>
+        <div class="row muted small" style="margin-top:6px">
+          <div><b>Demo:</b> admin@school / admin123</div>
+          <div>• teacher1@school / teacher123</div>
+          <div>• stu101@school / student123</div>
+        </div>
+      </div>
+
+      <!-- General Notifications -->
+      <div class="card span-8">
+        <div class="row">
+          <h3 style="margin:0">General Notifications</h3>
+          <button data-goto="notices" class="btn outline right">See All</button>
+        </div>
+        <div id="homeNotices"></div>
+      </div>
+
+      <!-- Highlights -->
+      <div class="card span-4">
+        <h3 style="margin:0">Highlights</h3>
+        <div id="homeHighlights" class="small muted" style="margin-top:6px"></div>
+        <div class="row" style="margin-top:10px">
+          <button data-goto="calendar" class="btn soft">Open Calendar</button>
+          <button data-goto="gallery" class="btn soft">Open Gallery</button>
+        </div>
+      </div>
+
+      <!-- Year Calendar preview -->
+      <div class="card span-6">
+        <div class="row">
+          <strong>School Year Events</strong>
+          <span class="badge right">Calendar</span>
+        </div>
+        <div id="homeCalendarMini" class="small" style="margin-top:8px;max-height:230px;overflow:auto"></div>
+      </div>
+
+      <!-- Gallery preview -->
+      <div class="card span-6">
+        <div class="row">
+          <strong>Event Gallery</strong>
+          <button data-goto="gallery" class="btn outline right">See Gallery</button>
+        </div>
+        <div id="homeGalleryMini" class="row" style="margin-top:10px"></div>
+      </div>
+
+      <!-- Contact & About -->
+      <div class="card span-6">
+        <h3>Contact</h3>
+        <div class="small">
+          📞 <b>+91 90227 61401</b><br/>
+          ✉️ <b>info@littleflowerschool.edu</b><br/>
+          📍 Wardha, Maharashtra
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <h3>About this app</h3>
+        <div class="small">
+          A modern, offline-capable single-file school portal designed for fast deployment (Netlify → APK).<br/><br/>
+          <b>Credit (non-editable):</b><br/>
+          Developed by <b>Shubham Arun Hajare</b> — Contact: <span class="kbd">9022761401</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN -->
+  <section id="screen-login" class="hidden fade">
+    <div class="backbar">
+      <button class="backbtn" data-back="home">← Back</button>
+      <h3 style="margin:0">Login</h3>
+      <span class="badge">Secure</span>
+    </div>
+
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Enter Credentials</h3>
+        <div class="row">
+          <div style="flex:1;min-width:220px">
+            <label>Email</label>
+            <input id="loginEmail" placeholder="e.g. admin@school">
+          </div>
+          <div style="flex:1;min-width:220px">
+            <label>Password</label>
+            <input id="loginPass" type="password" placeholder="Password">
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button id="btnLogin" class="btn">Login</button>
+          <button id="btnShowSamples" class="btn outline">Show Sample IDs</button>
+          <button id="btnLogout" class="btn outline right hidden">Logout</button>
+        </div>
+        <div id="loginMsg" class="small muted" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card span-6">
+        <h3>After login</h3>
+        <div class="small">You’ll be redirected to your dashboard with role-based controls.</div>
+        <div class="pill" style="margin-top:10px">Admin → Master Control</div>
+        <div class="pill" style="margin-top:6px">Teacher → Class Tools</div>
+        <div class="pill" style="margin-top:6px">Student → Personal View</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="screen-admin" class="hidden fade">
+    <div class="backbar">
+      <button class="backbtn" data-back="home">← Home</button>
+      <h3 style="margin:0">Admin Dashboard</h3>
+      <span class="badge right" id="adminWelcome">Welcome, Admin</span>
+    </div>
+
+    <div class="grid">
+      <!-- Notifications -->
+      <div class="card span-12">
+        <div class="row">
+          <h3 style="margin:0">Push Notifications</h3>
+          <span class="small muted">General / Students / Teachers</span>
+        </div>
+        <div class="row" style="margin-top:6px">
+          <select id="nType" style="max-width:200px">
+            <option value="general">General</option>
+            <option value="student">Students</option>
+            <option value="teacher">Teachers</option>
+          </select>
+          <input id="nTitle" placeholder="Title" style="flex:1">
+          <input id="nDate" placeholder="dd-mm-yyyy" style="max-width:160px">
+          <button id="btnPostNotice" class="btn">Post</button>
+        </div>
+        <textarea id="nBody" placeholder="Message content..." style="margin-top:8px"></textarea>
+        <div id="adminNoticeMsg" class="small muted" style="margin-top:6px"></div>
+      </div>
+
+      <!-- Users -->
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Users</h3>
+          <span class="badge right">Students & Teachers</span>
+        </div>
+        <div class="row">
+          <select id="userRole" style="max-width:160px">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+          <input id="uName" placeholder="Full name">
+          <input id="uEmail" placeholder="Email (login)">
+        </div>
+        <div class="row" style="margin-top:6px">
+          <input id="uClass" placeholder="Class (e.g. 5A)">
+          <input id="uRoll" placeholder="Roll / StaffID">
+          <input id="uPass" placeholder="Temp password">
+          <button id="btnAddUser" class="btn">Add</button>
+        </div>
+        <div style="margin-top:10px;max-height:220px;overflow:auto">
+          <table>
+            <thead><tr><th>Name</th><th>Role</th><th>Class</th><th>ID</th><th>Actions</th></tr></thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Attendance Master -->
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Attendance (Master)</h3>
+          <span class="badge right">Student & Teacher</span>
+        </div>
+        <div class="row">
+          <select id="attWho">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+          <input id="attDateA" type="date" style="max-width:180px">
+          <select id="attStatusA">
+            <option value="present">Present</option>
+            <option value="absent">Absent</option>
+            <option value="leave">Leave</option>
+          </select>
+          <select id="attUserA" style="flex:1"></select>
+          <button id="btnMarkAttA" class="btn">Save</button>
+        </div>
+        <div style="margin-top:8px;max-height:200px;overflow:auto">
+          <table>
+            <thead><tr><th>Date</th><th>User</th><th>Role</th><th>Status</th><th>Act</th></tr></thead>
+            <tbody id="attTableA"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Fees -->
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Fees (Manage)</h3>
+          <span class="badge right">Totals / Paid / Due</span>
+        </div>
+        <div class="row">
+          <select id="feeStudentSel" style="flex:1"></select>
+          <input id="feeTotalCurr" placeholder="Total (This Year)">
+          <input id="feeTotalLast" placeholder="Total (Last Year)">
+          <button id="btnSetFees" class="btn">Update</button>
+        </div>
+        <div style="margin-top:8px;max-height:200px;overflow:auto">
+          <table>
+            <thead><tr><th>Student</th><th>Curr Total</th><th>Paid</th><th>Due</th><th>Last Yr</th></tr></thead>
+            <tbody id="feesTableA"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Calendar & Gallery -->
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Calendar & Events</h3>
+          <span class="badge right">Year Planner</span>
+        </div>
+        <div class="row">
+          <input id="evTitle" placeholder="Event title">
+          <input id="evDate" placeholder="dd-mm-yyyy" style="max-width:160px">
+          <select id="evType">
+            <option value="holiday">Holiday</option>
+            <option value="exam">Exam</option>
+            <option value="activity">Activity</option>
+          </select>
+          <button id="btnAddEvent" class="btn">Add</button>
+        </div>
+        <textarea id="evDesc" placeholder="Description" style="margin-top:6px"></textarea>
+        <div style="margin-top:8px;max-height:200px;overflow:auto">
+          <table>
+            <thead><tr><th>Date</th><th>Title</th><th>Type</th><th>Act</th></tr></thead>
+            <tbody id="eventTableA"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Gallery</h3>
+          <span class="badge right">Drive Links</span>
+        </div>
+        <div class="row">
+          <input id="galCat" placeholder="Category (e.g. Independence Day)">
+          <input id="galTitle" placeholder="Item title">
+          <input id="galLink" placeholder="https://drive.google.com/...">
+          <button id="btnAddGallery" class="btn">Add</button>
+        </div>
+        <div style="margin-top:8px;max-height:230px;overflow:auto">
+          <table>
+            <thead><tr><th>Category</th><th>Title</th><th>Link</th><th>Act</th></tr></thead>
+            <tbody id="galTableA"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Leave Applications -->
+      <div class="card span-12">
+        <div class="row">
+          <h3 style="margin:0">Leave Applications</h3>
+          <span class="badge right">Approve / Reject</span>
+        </div>
+        <div style="margin-top:8px;max-height:240px;overflow:auto">
+          <table>
+            <thead><tr><th>Applicant</th><th>Role</th><th>From</th><th>To</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="leaveTableA"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="card span-6">
+        <h3>Settings</h3>
+        <div class="row">
+          <input id="setSchoolName" placeholder="School display name">
+          <button id="btnSetName" class="btn">Save Name</button>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <input id="setLogoUrl" placeholder="Logo image URL (PNG/SVG)">
+          <button id="btnSetLogo" class="btn">Update Logo</button>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <select id="themePick" style="max-width:200px">
+            <option value="dark">Dark (Default)</option>
+            <option value="light">Light</option>
+          </select>
+          <button id="btnApplyTheme" class="btn">Apply Theme</button>
+        </div>
+      </div>
+
+      <!-- Advanced -->
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Advanced Features</h3>
+          <span class="badge right">Protected</span>
+        </div>
+        <div class="small muted">Password required to delete modules or reset data.</div>
+        <div class="row" style="margin-top:8px">
+          <input id="advPass" type="password" placeholder="Security password (admin123)">
+          <button id="btnExport" class="btn outline">Export JSON</button>
+          <label class="btn outline" for="fileImport">Import JSON</label>
+          <input id="fileImport" type="file" accept="application/json" class="hidden">
+        </div>
+        <div class="row" style="margin-top:8px">
+          <input id="newModuleName" placeholder="New Module name (UI only)">
+          <button id="btnAddModule" class="btn">Add Module</button>
+          <button id="btnReset" class="btn danger" style="background:#070000">Reset Data</button>
+        </div>
+        <div id="modulesList" class="small" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEACHER -->
+  <section id="screen-teacher" class="hidden fade">
+    <div class="backbar">
+      <button class="backbtn" data-back="home">← Home</button>
+      <h3 style="margin:0">Teacher Dashboard</h3>
+      <span id="teacherWelcome" class="badge right">Welcome</span>
+    </div>
+
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Profile</h3>
+        <div id="teacherProfile" class="small"></div>
+      </div>
+
+      <div class="card span-6">
+        <h3>Upload Class Notes</h3>
+        <div class="row">
+          <input id="tNoteTitle" placeholder="Title">
+          <input id="tNoteLink" placeholder="Drive link (PDF/Image)">
+          <button id="btnUploadNote" class="btn">Upload</button>
+        </div>
+        <div id="tNotesMsg" class="small muted" style="margin-top:6px"></div>
+      </div>
+
+      <div class="card span-12">
+        <div class="row">
+          <h3 style="margin:0">Students (My Class)</h3>
+          <span class="badge right">Edit profiles</span>
+        </div>
+        <div style="margin-top:8px;max-height:260px;overflow:auto">
+          <table>
+            <thead><tr><th>Name</th><th>Class</th><th>Roll</th><th>Actions</th></tr></thead>
+            <tbody id="teachStudentsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <div class="row">
+          <h3 style="margin:0">Take Attendance</h3>
+          <span class="badge right">Calendar Picker</span>
+        </div>
+        <div class="row">
+          <input id="tAttDate" type="date" style="max-width:200px">
+          <select id="tAttStudent"></select>
+          <select id="tAttStatus">
+            <option value="present">Present</option>
+            <option value="absent">Absent</option>
+            <option value="leave">Leave</option>
+          </select>
+          <button id="btnTMark" class="btn">Save</button>
+          <button id="btnTMonth" class="btn outline">View Month</button>
+          <button id="btnTPrint" class="btn outline">Print</button>
+        </div>
+        <div style="margin-top:8px;max-height:240px;overflow:auto">
+          <table>
+            <thead><tr><th>Date</th><th>Student</th><th>Status</th><th>Act</th></tr></thead>
+            <tbody id="tAttTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <div class="row">
+          <h3 style="margin:0">Apply Leave</h3>
+          <span class="badge right">Pending approval</span>
+        </div>
+        <div class="row">
+          <input id="tLeaveFrom" type="date" style="max-width:200px">
+          <input id="tLeaveTo" type="date" style="max-width:200px">
+          <select id="tLeaveReason">
+            <option value="sick">Sick</option>
+            <option value="out_of_town">Out of Town</option>
+            <option value="family_emergency">Family Emergency</option>
+            <option value="educational">Educational</option>
+            <option value="other">Other</option>
+          </select>
+          <button id="btnTLeave" class="btn">Apply</button>
+        </div>
+        <div style="margin-top:8px;max-height:220px;overflow:auto">
+          <table>
+            <thead><tr><th>From</th><th>To</th><th>Reason</th><th>Status</th></tr></thead>
+            <tbody id="tLeaveTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDENT -->
+  <section id="screen-student" class="hidden fade">
+    <div class="backbar">
+      <button class="backbtn" data-back="home">← Home</button>
+      <h3 style="margin:0">Student Dashboard</h3>
+      <span class="badge right" id="stuWelcome">Welcome</span>
+    </div>
+
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Profile</h3>
+        <div id="stuProfile" class="small"></div>
+      </div>
+
+      <div class="card span-6">
+        <h3>Fees (View only)</h3>
+        <div id="stuFees" class="small"></div>
+      </div>
+
+      <div class="card span-12">
+        <h3>Attendance</h3>
+        <div style="max-height:240px;overflow:auto">
+          <table>
+            <thead><tr><th>Date</th><th>Status</th></tr></thead>
+            <tbody id="stuAttTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <div class="row">
+          <h3 style="margin:0">Apply Leave</h3>
+          <span class="badge right">Pending approval</span>
+        </div>
+        <div class="row">
+          <input id="sLeaveFrom" type="date" style="max-width:200px">
+          <input id="sLeaveTo" type="date" style="max-width:200px">
+          <select id="sLeaveReason">
+            <option value="sick">Sick</option>
+            <option value="out_of_town">Out of Town</option>
+            <option value="family_emergency">Family Emergency</option>
+            <option value="educational">Educational</option>
+            <option value="other">Other</option>
+          </select>
+          <button id="btnSLeave" class="btn">Apply</button>
+        </div>
+        <div style="margin-top:8px;max-height:220px;overflow:auto">
+          <table>
+            <thead><tr><th>From</th><th>To</th><th>Reason</th><th>Status</th></tr></thead>
+            <tbody id="sLeaveTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Notices</h3>
+          <span class="badge right">General + Student</span>
+        </div>
+        <div id="stuNotices" class="small"></div>
+      </div>
+
+      <div class="card span-6">
+        <div class="row">
+          <h3 style="margin:0">Achievements</h3>
+          <span class="badge right">Certificates</span>
+        </div>
+        <div id="stuAchievements" class="small"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTICES (Public) -->
+  <section id="screen-notices" class="hidden fade">
+    <div class="backbar">
+      <button class="backbtn" data-back="home">← Home</button>
+      <h3 style="margin:0">Notifications</h3>
+    </div>
+    <div class="card">
+      <div class="row">
+        <select id="noticeFilter" style="max-width:200px">
+          <option value="general">General</option>
+          <option value="student">Students</option>
+          <option value="teacher">Teachers</option>
+          <option value="all">All</option>
+        </select>
+        <input id="noticeSearch" placeholder="Search title..." style="flex:1">
+      </div>
+      <div id="noticeList" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <!-- CALENDAR (Public) -->
+  <section id="screen-calendar" class="hidden fade">
+    <div class="backbar">
+      <button class="backbtn" data-back="home">← Home</button>
+      <h3 style="margin:0">School Calendar</h3>
+      <span class="badge right" id="monthLabel">—</span>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <button id="prevMonth" class="btn outline">◀</button>
+        <button id="todayMonth" class="btn outline">Today</button>
+        <button id="nextMonth" class="btn outline">▶</button>
+        <div class="right small muted">Legend:
+          <span class="ev holiday">Holiday</span>
+          <span class="ev exam">Exam</span>
+          <span class="ev activity">Activity</span>
+        </div>
+      </div>
+      <div id="calendarGrid" class="calendar" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <h3>Year Events (List)</h3>
+      <div id="yearEventsList" style="max-height:260px;overflow:auto"></div>
+    </div>
+  </section>
+
+  <!-- GALLERY (Public) -->
+  <section id="screen-gallery" class="hidden fade">
+    <div class="backbar">
+      <button class="backbtn" data-back="home">← Home</button>
+      <h3 style="margin:0">Event Gallery</h3>
+    </div>
+    <div class="grid" id="galleryGrid"></div>
+  </section>
+
+</main>
+
+<footer class="small muted" style="text-align:center; padding:16px">
+  Digital School • Single-file App • Local-first data • Netlify-ready
+</footer>
+
+<script>
+/* ===========================
+   PERSISTENCE & SEED DATA
+   =========================== */
+const DB_KEY = 'ds_premium_v1';
+const THEME_KEY = 'ds_theme';
+const SESSION_KEY = 'ds_session';
+const ADMIN_DELETE_PASSWORD = 'admin123'; // for destructive actions only
+
+let db = loadDB();
+let session = loadSession();
+applyTheme(loadTheme());
+
+function loadDB(){
+  const raw = localStorage.getItem(DB_KEY);
+  if (raw) { try{ return JSON.parse(raw); }catch{} }
+  const Y = new Date().getFullYear();
+
+  // Preloaded year events (India common)
+  const yearEvents = [
+    {title:'New Year Holiday', date:`01-01-${Y}`, type:'holiday', desc:'School closed'},
+    {title:'Republic Day', date:`26-01-${Y}`, type:'holiday', desc:'National holiday'},
+    {title:'Annual Sports Day', date:`15-02-${Y}`, type:'activity', desc:'Inter-house events'},
+    {title:'Holi Holiday', date:`25-03-${Y}`, type:'holiday', desc:'Festival of colors'},
+    {title:'Unit Test 1 - Start', date:`10-04-${Y}`, type:'exam', desc:'All classes'},
+    {title:'Summer Vacation', date:`20-05-${Y}`, type:'holiday', desc:'Till mid-June'},
+    {title:'School Reopens', date:`15-06-${Y}`, type:'activity', desc:'Welcome back!'},
+    {title:'Independence Day', date:`15-08-${Y}`, type:'holiday', desc:'Flag hoisting 8:30 AM'},
+    {title:'Janmashtami', date:`26-08-${Y}`, type:'holiday', desc:'School closed'},
+    {title:'Teacher’s Day Celebration', date:`05-09-${Y}`, type:'activity', desc:'Assembly & fun events'},
+    {title:'Half-Yearly Exams Begin', date:`20-09-${Y}`, type:'exam', desc:'All classes'},
+    {title:'Gandhi Jayanti', date:`02-10-${Y}`, type:'holiday', desc:'National holiday'},
+    {title:'Diwali Vacation', date:`01-11-${Y}`, type:'holiday', desc:'Dates vary by state'},
+    {title:'Children’s Day', date:`14-11-${Y}`, type:'activity', desc:'Special assembly'},
+    {title:'Unit Test 2 - Start', date:`05-12-${Y}`, type:'exam', desc:'All classes'},
+    {title:'Christmas Holiday', date:`25-12-${Y}`, type:'holiday', desc:'School closed'}
+  ];
+
+  const seed = {
+    schoolName: 'Little Flower School',
+    logo: '',
+
+    users: [
+      {id:'u-admin', role:'admin', name:'School Admin', email:'admin@school', pass:'admin123'},
+      {id:'t-001', role:'teacher', name:'Shubham Sir', email:'teacher1@school', pass:'teacher123', class:'5A', staffId:'T001'},
+      {id:'stu101', role:'student', name:'Riya Sharma', email:'stu101@school', pass:'student123', class:'5A', roll:'21'},
+      {id:'stu102', role:'student', name:'Arjun Verma', email:'arjun@school', pass:'student123', class:'5A', roll:'17'}
+    ],
+
+    // Attendance & Leaves
+    attendance: [],  // {id, who:'student'|'teacher', userId, date:'YYYY-MM-DD', status}
+    leaves: [],      // {id, userId, role, from, to, reason, status:'pending|approved|rejected'}
+
+    // Fees
+    fees: {
+      stu101: {totalCurr: 3500, totalLast: 3200, paid: 1500},
+      stu102: {totalCurr: 3600, totalLast: 3400, paid:  800}
+    },
+
+    // Notices (type: general|student|teacher)
+    notices: [
+      {id:'n1', type:'general', title:'PTM on Saturday', date:`20-08-${Y}`, body:'Parents are requested to attend 10am-12pm.'},
+      {id:'n2', type:'student', title:'Unit Test Schedule', date:`10-04-${Y}`, body:'Syllabus posted on the board.'},
+      {id:'n3', type:'teacher', title:'Staff Meeting', date:`05-09-${Y}`, body:'3:30 PM in staff room.'}
+    ],
+
+    // Events
+    events: yearEvents.map((e,i)=>({id:'e'+(i+1), ...e})),
+
+    // Gallery
+    gallery: [
+      {id:'g1', category:'Independence Day', title:'Flag Hoisting', link:'https://drive.google.com/'},
+      {id:'g2', category:'Sports Day', title:'100m Sprint', link:'https://drive.google.com/'},
+      {id:'g3', category:'Annual Day', title:'Dance Performance', link:'https://drive.google.com/'}
+    ],
+
+    // Notes by teachers (drive links)
+    notes: [], // {id, teacherId, title, link}
+
+    // Student achievements
+    achievements: {
+      stu101: [{id:'a1', title:'Science Quiz Winner', when:`12-07-${Y}`}],
+      stu102: []
+    },
+
+    // UI modules (for demo add/remove)
+    modules: ['Users','Attendance','Fees','Calendar','Gallery','Leaves','Settings','Advanced']
+  };
+  saveDB(seed);
+  return seed;
+}
+function saveDB(d){ localStorage.setItem(DB_KEY, JSON.stringify(d)); }
+function loadTheme(){ return localStorage.getItem(THEME_KEY) || 'dark'; }
+function applyTheme(mode){ document.body.setAttribute('data-theme', mode); localStorage.setItem(THEME_KEY, mode); }
+function loadSession(){
+  const raw = localStorage.getItem(SESSION_KEY);
+  if (raw){ try{ return JSON.parse(raw); }catch{} }
+  return {logged:false, user:null};
+}
+function saveSession(){ localStorage.setItem(SESSION_KEY, JSON.stringify(session)); }
+
+/* ===========================
+   HELPERS
+   =========================== */
+const $ = (q,sc=document)=>sc.querySelector(q);
+const $$ = (q,sc=document)=>Array.from(sc.querySelectorAll(q));
+const fmtDateDMY = (d)=> {
+  const dt = new Date(d); const dd = String(dt.getDate()).padStart(2,'0');
+  const mm = String(dt.getMonth()+1).padStart(2,'0'); const yy = dt.getFullYear();
+  return `${dd}-${mm}-${yy}`;
+};
+const parseDMY = (s)=>{const [dd,mm,yy]=s.split('-').map(x=>parseInt(x,10)); return new Date(yy,mm-1,dd);};
+const uid = (p='id')=> p + Math.random().toString(36).slice(2,9);
+
+/* ===========================
+   NAVIGATION
+   =========================== */
+const screens = {
+  home: $('#screen-home'),
+  login: $('#screen-login'),
+  admin: $('#screen-admin'),
+  teacher: $('#screen-teacher'),
+  student: $('#screen-student'),
+  notices: $('#screen-notices'),
+  calendar: $('#screen-calendar'),
+  gallery: $('#screen-gallery')
+};
+let currentScreen = 'home';
+
+function show(screen){
+  Object.values(screens).forEach(el=>el.classList.add('hidden'));
+  screens[screen].classList.remove('hidden');
+  currentScreen = screen;
+  // refresh role chip & drawer items
+  renderRoleChip();
+  renderDrawer();
+  // role-based hides on home
+  if (screen==='home') renderHome();
+  if (screen==='notices') mountNotices();
+  if (screen==='calendar') mountCalendar();
+  if (screen==='gallery') mountGallery();
+  if (screen==='admin') mountAdmin();
+  if (screen==='teacher') mountTeacher();
+  if (screen==='student') mountStudent();
+}
+
+$('#btnMenu').onclick = ()=> $('#drawer').classList.add('open');
+$('#btnCloseDrawer').onclick = ()=> $('#drawer').classList.remove('open');
+$('#btnTheme').onclick = ()=> applyTheme( document.body.getAttribute('data-theme')==='dark' ? 'light':'dark' );
+
+// hero quick buttons
+$('#goLoginTop').onclick = ()=> show('login');
+$('#goCalendarTop').onclick = ()=> show('calendar');
+$('#goGalleryTop').onclick = ()=> show('gallery');
+
+$$('.backbtn').forEach(b=> b.onclick = (e)=>{ const to = e.currentTarget.dataset.back || 'home'; show(to); });
+
+$$('[data-goto]').forEach(b=> b.addEventListener('click', e => show(e.currentTarget.dataset.goto)));
+
+/* ===========================
+   HEADER / DRAWER RENDER
+   =========================== */
+function renderRoleChip(){
+  const chip = $('#roleChip');
+  if (!session.logged){ chip.textContent = 'Guest'; return; }
+  const u = session.user;
+  chip.textContent = (u.role.charAt(0).toUpperCase()+u.role.slice(1)) + ' · ' + u.name.split(' ')[0];
+}
+function renderDrawer(){
+  const wrap = $('#menuItems');
+  wrap.innerHTML = '';
+  const add = (label,screen,emoji='›')=>{
+    const b = document.createElement('button'); b.innerHTML = `${emoji} ${label}`;
+    b.onclick = ()=>{ $('#drawer').classList.remove('open'); show(screen); };
+    wrap.appendChild(b);
+  };
+  add('Home','home','🏠');
+  add('Notifications','notices','📢');
+  add('Calendar','calendar','📅');
+  add('Gallery','gallery','🖼️');
+  if (session.logged){
+    if (session.user.role==='admin') add('Admin Dashboard','admin','🛠️');
+    if (session.user.role==='teacher') add('Teacher Dashboard','teacher','👩‍🏫');
+    if (session.user.role==='student') add('Student Dashboard','student','👩‍🎓');
+    const out = document.createElement('button'); out.innerHTML = '🔓 Logout';
+    out.onclick = ()=>{ session={logged:false,user:null}; saveSession(); show('home'); };
+    wrap.appendChild(out);
+  } else {
+    add('Login','login','🔐');
+  }
+}
+
+/* ===========================
+   HOME RENDER
+   =========================== */
+function renderHome(){
+  // school name & logo
+  $('#schoolName').textContent = db.schoolName || 'Little Flower School';
+  if (db.logo){
+    $('#logoBox').innerHTML = `<img src="${db.logo}" alt="logo" style="width:26px;height:26px">`;
+  }
+  // notices preview
+  const ndiv = $('#homeNotices');
+  const top = db.notices.slice(-5).reverse();
+  ndiv.innerHTML = top.map(n=> `<div class="row" style="padding:8px 0;border-bottom:1px dashed var(--border)">
+    <div><b>[${n.type}]</b> ${n.title}</div>
+    <div class="right small muted">${n.date}</div></div>`).join('') || '<div class="small muted">No notices yet.</div>';
+  // highlights
+  const next = nextEvent();
+  $('#homeHighlights').innerHTML = next ? `<b>Next:</b> ${next.title} • ${next.date} <span class="badge ${next.type}">${next.type}</span>` : 'No upcoming events.';
+  // mini calendar list
+  const mini = db.events.slice().sort((a,b)=> parseDMY(a.date)-parseDMY(b.date));
+  $('#homeCalendarMini').innerHTML = mini.map(e=>`<div style="padding:6px 0;border-bottom:1px dashed var(--border)">
+  <b>${e.date}</b> — ${e.title} <span class="badge ${e.type}">${e.type}</span></div>`).join('');
+  // mini gallery
+  const g = $('#homeGalleryMini'); g.innerHTML='';
+  db.gallery.slice(-6).forEach(item=>{
+    const a = document.createElement('a');
+    a.href=item.link; a.target="_blank"; a.className='pill';
+    a.style.display='inline-block'; a.style.marginRight='8px';
+    a.textContent = `${item.category}: ${item.title}`;
+    g.appendChild(a);
+  });
+}
+function nextEvent(){
+  const now = new Date();
+  const sorted = db.events.slice().sort((a,b)=> parseDMY(a.date)-parseDMY(b.date));
+  return sorted.find(e => parseDMY(e.date) >= now);
+}
+
+/* ===========================
+   LOGIN
+   =========================== */
+$('#btnShowSamples').onclick = ()=>{
+  $('#loginMsg').innerHTML = `
+  <div class="kbd">Admin → admin@school / admin123</div>
+  <div class="kbd">Teacher → teacher1@school / teacher123</div>
+  <div class="kbd">Student → stu101@school / student123</div>`;
+};
+$('#btnLogin').onclick = ()=>{
+  const email = $('#loginEmail').value.trim();
+  const pass = $('#loginPass').value.trim();
+  const user = db.users.find(u=>u.email===email && u.pass===pass);
+  const msg = $('#loginMsg');
+  if (!user){ msg.textContent='Invalid credentials.'; return; }
+  session = {logged:true, user};
+  saveSession();
+  renderRoleChip();
+  msg.textContent='Login successful.';
+  $('#btnLogout').classList.remove('hidden');
+  if (user.role==='admin') show('admin');
+  if (user.role==='teacher') show('teacher');
+  if (user.role==='student') show('student');
+};
+$('#btnLogout').onclick = ()=>{ session={logged:false,user:null}; saveSession(); renderRoleChip(); show('home'); };
+
+/* ===========================
+   NOTICES
+   =========================== */
+function mountNotices(){
+  const filterSel = $('#noticeFilter'), sbox = $('#noticeSearch'), list = $('#noticeList');
+  const render = ()=>{
+    const type = filterSel.value;
+    const q = sbox.value.toLowerCase();
+    let arr = db.notices.slice().reverse();
+    if (type!=='all') arr = arr.filter(n=>n.type===type);
+    if (q) arr = arr.filter(n=> n.title.toLowerCase().includes(q));
+    list.innerHTML = arr.map(n=> `<div class="card" style="margin-top:8px">
+      <div class="row"><strong>[${n.type}] ${n.title}</strong><div class="right small muted">${n.date}</div></div>
+      <div class="small" style="margin-top:6px">${n.body||''}</div>
+    </div>`).join('') || '<div class="small muted">No notices</div>';
+  };
+  filterSel.onchange = render; sbox.oninput = render; render();
+}
+
+/* ===========================
+   CALENDAR
+   =========================== */
+let calMonth = new Date().getMonth();
+let calYear = new Date().getFullYear();
+
+function mountCalendar(){
+  $('#monthLabel').textContent = new Date(calYear, calMonth, 1).toLocaleString('en', {month:'long', year:'numeric'});
+  buildCalendarGrid(calYear, calMonth);
+  // Year list
+  const list = db.events.slice().sort((a,b)=> parseDMY(a.date)-parseDMY(b.date))
+    .map(e=> `<div style="padding:6px 0;border-bottom:1px dashed var(--border)">
+    <b>${e.date}</b> — ${e.title} <span class="badge ${e.type}">${e.type}</span></div>`).join('');
+  $('#yearEventsList').innerHTML = list || '<div class="small muted">No events</div>';
+}
+function buildCalendarGrid(y,m){
+  const grid = $('#calendarGrid'); grid.innerHTML='';
+  const first = new Date(y,m,1).getDay(); // 0 Sun
+  const days = new Date(y, m+1, 0).getDate();
+  // pad start
+  for (let i=0;i<first;i++){ const d=document.createElement('div'); d.className='day'; d.style.opacity=.4; grid.appendChild(d); }
+  for (let d=1; d<=days; d++){
+    const cell = document.createElement('div'); cell.className='day';
+    cell.innerHTML = `<div class="date-num">${d}</div>`;
+    const dmy = `${String(d).padStart(2,'0')}-${String(m+1).padStart(2,'0')}-${y}`;
+    db.events.filter(e=>e.date===dmy).forEach(e=>{
+      const tag = document.createElement('div'); tag.className=`ev ${e.type}`; tag.textContent = e.title;
+      cell.appendChild(tag);
+    });
+    grid.appendChild(cell);
+  }
+}
+$('#prevMonth').onclick = ()=>{ calMonth--; if (calMonth<0){calMonth=11; calYear--;} mountCalendar(); };
+$('#nextMonth').onclick = ()=>{ calMonth++; if (calMonth>11){calMonth=0; calYear++;} mountCalendar(); };
+$('#todayMonth').onclick = ()=>{ const n=new Date(); calMonth=n.getMonth(); calYear=n.getFullYear(); mountCalendar(); };
+
+/* ===========================
+   GALLERY
+   =========================== */
+function mountGallery(){
+  const grid = $('#galleryGrid'); grid.innerHTML='';
+  const byCat = {};
+  db.gallery.forEach(g=>{ byCat[g.category]=byCat[g.category]||[]; byCat[g.category].push(g); });
+  Object.entries(byCat).forEach(([cat,items])=>{
+    const card = document.createElement('div'); card.className='card span-6';
+    card.innerHTML = `<div class="row"><h3 style="margin:0">${cat}</h3><span class="badge right">${items.length}</span></div>`;
+    const list = document.createElement('div'); list.className='small';
+    items.forEach(it=>{
+      const a = document.createElement('a'); a.href=it.link; a.target="_blank"; a.className='pill';
+      a.style.display='inline-block'; a.style.margin='6px 6px 0 0'; a.textContent=it.title;
+      list.appendChild(a);
+    });
+    card.appendChild(list);
+    grid.appendChild(card);
+  });
+}
+
+/* ===========================
+   ADMIN DASHBOARD
+   =========================== */
+function mountAdmin(){
+  if (!session.logged || session.user.role!=='admin'){ show('login'); return; }
+  $('#adminWelcome').textContent = `Welcome, ${session.user.name}`;
+  // Users table
+  renderUsers();
+  // Attendance select users
+  fillUserSelectsAdmin();
+  renderAttAdmin();
+  // Fees table
+  fillFeeSelect();
+  renderFeesAdmin();
+  // Events
+  renderEventsAdmin();
+  // Gallery
+  renderGalleryAdmin();
+  // Leaves
+  renderLeavesAdmin();
+  // Settings placeholders shown
+  $('#setSchoolName').value = db.schoolName;
+  $('#setLogoUrl').value = db.logo || '';
+  $('#themePick').value = document.body.getAttribute('data-theme')||'dark';
+  // Modules list
+  renderModulesList();
+}
+
+/* Notices Post */
+$('#btnPostNotice').onclick = ()=>{
+  const type = $('#nType').value, title=$('#nTitle').value.trim(), date=$('#nDate').value.trim(), body=$('#nBody').value.trim();
+  if (!title || !date){ $('#adminNoticeMsg').textContent='Title & date required'; return; }
+  db.notices.push({id:uid('n'), type, title, date, body});
+  saveDB(db);
+  $('#adminNoticeMsg').textContent='Notice posted.';
+  $('#nTitle').value=''; $('#nDate').value=''; $('#nBody').value='';
+  renderHome();
+};
+
+/* Users CRUD */
+function renderUsers(){
+  const tb = $('#usersTable'); tb.innerHTML='';
+  db.users.forEach(u=>{
+    if (u.role==='admin') return; // don't show admin in table
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${u.name}</td><td>${u.role}</td><td>${u.class||'-'}</td><td>${u.roll||u.staffId||'-'}</td>
+      <td><button class="btn outline" data-act="edit" data-id="${u.id}">Edit</button>
+          <button class="btn outline" data-act="del" data-id="${u.id}">Delete</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('button').forEach(b=> b.onclick = onUserAct);
+}
+function onUserAct(e){
+  const id = e.currentTarget.dataset.id, act=e.currentTarget.dataset.act;
+  const u = db.users.find(x=>x.id===id);
+  if (!u) return;
+  if (act==='edit'){
+    openModal(`<h3>Edit User</h3>
+      <div class="row"><input id="mName" value="${u.name}"><input id="mEmail" value="${u.email}"></div>
+      <div class="row"><input id="mClass" value="${u.class||''}"><input id="mId" value="${u.roll||u.staffId||''}"></div>
+      <div class="row"><button id="mSave" class="btn">Save</button>
+      <button id="mClose" class="btn outline">Close</button></div>`);
+    $('#mSave').onclick = ()=>{
+      u.name=$('#mName').value.trim(); u.email=$('#mEmail').value.trim();
+      if (u.role==='student'){ u.roll=$('#mId').value.trim(); u.class=$('#mClass').value.trim();}
+      if (u.role==='teacher'){ u.staffId=$('#mId').value.trim(); u.class=$('#mClass').value.trim();}
+      saveDB(db); closeModal(); renderUsers(); if (session.logged) mountTeacher(); renderHome();
+    };
+    $('#mClose').onclick = closeModal;
+  } else if (act==='del'){
+    if (!guardAction()) return;
+    const idx = db.users.findIndex(x=>x.id===id);
+    if (idx>-1) db.users.splice(idx,1);
+    saveDB(db); renderUsers();
+  }
+}
+$('#btnAddUser').onclick = ()=>{
+  const role = $('#userRole').value, name=$('#uName').value.trim(), email=$('#uEmail').value.trim();
+  const cls=$('#uClass').value.trim(), roll=$('#uRoll').value.trim(), pass=$('#uPass').value.trim()||'123456';
+  if (!name || !email){ alert('Name & email required'); return; }
+  const id = uid(role==='student'?'stu':'t');
+  const user = {id, role, name, email, pass};
+  if (role==='student'){ user.class=cls; user.roll=roll; }
+  if (role==='teacher'){ user.class=cls; user.staffId=roll; }
+  db.users.push(user); saveDB(db); renderUsers(); fillUserSelectsAdmin(); fillFeeSelect();
+  $('#uName').value=$('#uEmail').value=$('#uClass').value=$('#uRoll').value=$('#uPass').value='';
+};
+
+/* Attendance Admin */
+function fillUserSelectsAdmin(){
+  const sel = $('#attUserA'); sel.innerHTML='';
+  const who = $('#attWho').value;
+  db.users.filter(u=>u.role===who).forEach(u=>{
+    const o = document.createElement('option'); o.value=u.id; o.textContent = `${u.name} (${u.class||u.staffId||''})`; sel.appendChild(o);
+  });
+}
+$('#attWho').onchange = fillUserSelectsAdmin;
+$('#btnMarkAttA').onclick = ()=>{
+  const who = $('#attWho').value, uidv = $('#attUserA').value, date = $('#attDateA').value, status=$('#attStatusA').value;
+  if (!date){ alert('Pick a date'); return; }
+  db.attendance.push({id:uid('att'), who, userId:uidv, date, status});
+  saveDB(db); renderAttAdmin(); if (session.logged && session.user.role==='teacher') renderTeacherAtt();
+};
+function renderAttAdmin(){
+  const tb = $('#attTableA'); tb.innerHTML='';
+  db.attendance.slice().reverse().forEach(a=>{
+    const u = db.users.find(x=>x.id===a.userId)||{};
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${a.date}</td><td>${u.name||'-'}</td><td>${a.who}</td><td>${a.status}</td>
+      <td><button class="btn outline" data-id="${a.id}">Del</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('button').forEach(b=> b.onclick = (e)=>{
+    if (!guardAction()) return;
+    const id = e.currentTarget.dataset.id;
+    const idx = db.attendance.findIndex(x=>x.id===id);
+    if (idx>-1){ db.attendance.splice(idx,1); saveDB(db); renderAttAdmin(); }
+  });
+}
+
+/* Fees Admin */
+function fillFeeSelect(){
+  const sel = $('#feeStudentSel'); sel.innerHTML='';
+  db.users.filter(u=>u.role==='student').forEach(s=>{
+    const o=document.createElement('option'); o.value=s.id; o.textContent=`${s.name} (${s.class||''})`; sel.appendChild(o);
+  });
+}
+$('#btnSetFees').onclick = ()=>{
+  const sid = $('#feeStudentSel').value;
+  const curr = parseFloat($('#feeTotalCurr').value||0);
+  const last = parseFloat($('#feeTotalLast').value||0);
+  db.fees[sid] = db.fees[sid] || {totalCurr:0,totalLast:0,paid:0};
+  db.fees[sid].totalCurr = curr;
+  db.fees[sid].totalLast = last;
+  saveDB(db); renderFeesAdmin();
+};
+function renderFeesAdmin(){
+  const tb = $('#feesTableA'); tb.innerHTML='';
+  db.users.filter(u=>u.role==='student').forEach(s=>{
+    const f = db.fees[s.id] || {totalCurr:0,totalLast:0,paid:0};
+    const due = Math.max(0, (f.totalCurr||0) - (f.paid||0));
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${s.name}</td><td>₹${f.totalCurr||0}</td><td>₹${f.paid||0}</td><td>₹${due}</td><td>₹${f.totalLast||0}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* Events Admin */
+$('#btnAddEvent').onclick = ()=>{
+  const title=$('#evTitle').value.trim(), date=$('#evDate').value.trim(), type=$('#evType').value, desc=$('#evDesc').value.trim();
+  if (!title || !date){ alert('Title & date required'); return; }
+  db.events.push({id:uid('e'), title, date, type, desc});
+  saveDB(db); renderEventsAdmin(); renderHome(); mountCalendar();
+  $('#evTitle').value=''; $('#evDate').value=''; $('#evDesc').value='';
+};
+function renderEventsAdmin(){
+  const tb = $('#eventTableA'); tb.innerHTML='';
+  db.events.slice().sort((a,b)=> parseDMY(a.date)-parseDMY(b.date)).forEach(e=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${e.date}</td><td>${e.title}</td><td>${e.type}</td>
+      <td><button class="btn outline" data-id="${e.id}">Del</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('button').forEach(b=> b.onclick = (e)=>{
+    if (!guardAction()) return;
+    const id = e.currentTarget.dataset.id;
+    const idx = db.events.findIndex(x=>x.id===id);
+    if (idx>-1){ db.events.splice(idx,1); saveDB(db); renderEventsAdmin(); mountCalendar(); renderHome(); }
+  });
+}
+
+/* Gallery Admin */
+$('#btnAddGallery').onclick = ()=>{
+  const category=$('#galCat').value.trim(), title=$('#galTitle').value.trim(), link=$('#galLink').value.trim();
+  if (!category || !title || !link){ alert('All fields required'); return; }
+  db.gallery.push({id:uid('g'), category, title, link});
+  saveDB(db); renderGalleryAdmin(); mountGallery(); renderHome();
+  $('#galCat').value=$('#galTitle').value=$('#galLink').value='';
+};
+function renderGalleryAdmin(){
+  const tb = $('#galTableA'); tb.innerHTML='';
+  db.gallery.slice().reverse().forEach(g=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${g.category}</td><td>${g.title}</td><td><a href="${g.link}" target="_blank">Open</a></td>
+      <td><button class="btn outline" data-id="${g.id}">Del</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('button').forEach(b=> b.onclick = (e)=>{
+    if (!guardAction()) return;
+    const id = e.currentTarget.dataset.id;
+    const idx = db.gallery.findIndex(x=>x.id===id);
+    if (idx>-1){ db.gallery.splice(idx,1); saveDB(db); renderGalleryAdmin(); mountGallery(); renderHome(); }
+  });
+}
+
+/* Leaves Admin */
+function renderLeavesAdmin(){
+  const tb = $('#leaveTableA'); tb.innerHTML='';
+  db.leaves.slice().reverse().forEach(L=>{
+    const u = db.users.find(x=>x.id===L.userId)||{};
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${u.name||'-'}</td><td>${L.role}</td><td>${L.from}</td><td>${L.to}</td>
+    <td>${L.reason}</td><td>${L.status}</td>
+    <td>
+      <button class="btn outline" data-act="approve" data-id="${L.id}">Approve</button>
+      <button class="btn outline" data-act="reject" data-id="${L.id}">Reject</button>
+    </td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('button').forEach(b=> b.onclick = (e)=>{
+    const id=e.currentTarget.dataset.id, act=e.currentTarget.dataset.act;
+    const L = db.leaves.find(x=>x.id===id); if (!L) return;
+    L.status = (act==='approve'?'approved':'rejected');
+    saveDB(db); renderLeavesAdmin(); if (session.user.role==='teacher') renderTeacherLeaves(); if (session.user.role==='student') renderStudentLeaves();
+  });
+}
+
+/* Settings */
+$('#btnSetName').onclick = ()=>{ db.schoolName = $('#setSchoolName').value.trim()||'Little Flower School'; saveDB(db); renderHome(); };
+$('#btnSetLogo').onclick = ()=>{
+  db.logo = $('#setLogoUrl').value.trim();
+  saveDB(db); renderHome();
+};
+$('#btnApplyTheme').onclick = ()=>{ applyTheme($('#themePick').value); };
+
+/* Advanced */
+$('#btnExport').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(db,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='digital_school_backup.json'; a.click();
+};
+$('#fileImport').onchange = (e)=>{
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{ try{ db = JSON.parse(reader.result); saveDB(db); alert('Imported'); location.reload(); }catch{ alert('Invalid JSON'); } };
+  reader.readAsText(file);
+};
+$('#btnAddModule').onclick = ()=>{
+  const name = $('#newModuleName').value.trim(); if (!name) return;
+  db.modules.push(name); saveDB(db); renderModulesList(); $('#newModuleName').value='';
+};
+$('#btnReset').onclick = ()=>{
+  if (!guardAction()) return;
+  localStorage.removeItem(DB_KEY); db = loadDB(); alert('Data reset'); location.reload();
+};
+function guardAction(){
+  const p = $('#advPass').value.trim();
+  if (p!==ADMIN_DELETE_PASSWORD){ alert('Wrong security password'); return false; }
+  return true;
+}
+function renderModulesList(){
+  $('#modulesList').innerHTML = `<b>Modules:</b> ${db.modules.join(' • ')}`;
+}
+
+/* ===========================
+   TEACHER DASHBOARD
+   =========================== */
+function mountTeacher(){
+  if (!session.logged || session.user.role!=='teacher'){ show('login'); return; }
+  $('#teacherWelcome').textContent = `Welcome, ${session.user.name}`;
+  // Profile
+  $('#teacherProfile').innerHTML = `
+  <div class="row"><span class="pill">Name: <b>${session.user.name}</b></span></div>
+    <div class="row" style="margin-top:6px">
+      <span class="pill">Email: ${session.user.email}</span>
+      <span class="pill">Class: ${session.user.class||'-'}</span>
+      <span class="pill">Staff ID: ${session.user.staffId||'-'}</span>
+    </div>`;
+  // Notes upload
+  $('#tNoteTitle').value=''; $('#tNoteLink').value=''; $('#tNotesMsg').textContent='';
+  // Students of my class
+  renderTeachStudents();
+  // Attendance controls
+  fillTeacherStudentSelect();
+  renderTeacherAtt();
+  // Leaves for this teacher
+  renderTeacherLeaves();
+}
+
+/* Teacher — Class Students (edit profiles) */
+function renderTeachStudents(){
+  const tb = $('#teachStudentsTable'); tb.innerHTML='';
+  const myClass = session.user.class;
+  const list = db.users.filter(u=>u.role==='student' && u.class===myClass);
+  list.forEach(s=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${s.name}</td><td>${s.class||'-'}</td><td>${s.roll||'-'}</td>
+      <td>
+        <button class="btn outline" data-act="edit" data-id="${s.id}">Edit</button>
+      </td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('button').forEach(b=> b.onclick = (e)=>{
+    const id = e.currentTarget.dataset.id;
+    const s = db.users.find(x=>x.id===id); if (!s) return;
+    openModal(`<h3>Edit Student</h3>
+      <div class="row"><input id="esName" value="${s.name}"><input id="esClass" value="${s.class||''}"></div>
+      <div class="row"><input id="esRoll" value="${s.roll||''}"><input id="esEmail" value="${s.email||''}"></div>
+      <div class="row"><button id="esSave" class="btn">Save</button><button id="mClose" class="btn outline">Close</button></div>
+    `);
+    $('#esSave').onclick = ()=>{
+      s.name = $('#esName').value.trim();
+      s.class = $('#esClass').value.trim();
+      s.roll  = $('#esRoll').value.trim();
+      s.email = $('#esEmail').value.trim();
+      saveDB(db); closeModal(); renderTeachStudents(); fillTeacherStudentSelect(); renderStudentIfViewing(s.id);
+    };
+    $('#mClose').onclick = closeModal;
+  });
+}
+
+/* Teacher — Upload Notes */
+$('#btnUploadNote').onclick = ()=>{
+  if (!session.logged || session.user.role!=='teacher') return;
+  const title = $('#tNoteTitle').value.trim();
+  const link  = $('#tNoteLink').value.trim();
+  if (!title || !link){ $('#tNotesMsg').textContent='Title & link required.'; return; }
+  db.notes.push({id:uid('note'), teacherId:session.user.id, title, link});
+  saveDB(db);
+  $('#tNotesMsg').textContent='Note uploaded.';
+  $('#tNoteTitle').value=''; $('#tNoteLink').value='';
+};
+
+/* Teacher — Attendance */
+function fillTeacherStudentSelect(){
+  const sel = $('#tAttStudent'); sel.innerHTML='';
+  const myClass = session.user.class;
+  db.users.filter(u=>u.role==='student' && u.class===myClass).forEach(s=>{
+    const o=document.createElement('option'); o.value=s.id; o.textContent=`${s.name} (${s.roll||''})`; sel.appendChild(o);
+  });
+}
+$('#btnTMark').onclick = ()=>{
+  if (!session.logged || session.user.role!=='teacher') return;
+  const date = $('#tAttDate').value, sid = $('#tAttStudent').value, status = $('#tAttStatus').value;
+  if (!date || !sid) { alert('Pick date & student'); return; }
+  db.attendance.push({id:uid('att'), who:'student', userId:sid, date, status});
+  saveDB(db); renderTeacherAtt(); if (session.user.role==='student') renderStudentAtt();
+};
+function renderTeacherAtt(){
+  const tb = $('#tAttTable'); tb.innerHTML='';
+  const myClass = session.user.class;
+  const myStudents = new Set(db.users.filter(u=>u.role==='student' && u.class===myClass).map(s=>s.id));
+  db.attendance.filter(a=>a.who==='student' && myStudents.has(a.userId))
+    .slice().reverse().forEach(a=>{
+      const s = db.users.find(x=>x.id===a.userId)||{};
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${a.date}</td><td>${s.name||'-'}</td><td>${a.status}</td>
+        <td><button class="btn outline" data-id="${a.id}">Del</button></td>`;
+      tb.appendChild(tr);
+    });
+  tb.querySelectorAll('button').forEach(b=> b.onclick = (e)=>{
+    if (!guardAction()) return;
+    const id = e.currentTarget.dataset.id;
+    const idx = db.attendance.findIndex(x=>x.id===id);
+    if (idx>-1){ db.attendance.splice(idx,1); saveDB(db); renderTeacherAtt(); }
+  });
+}
+$('#btnTMonth').onclick = ()=>{
+  const month = new Date().toLocaleString('en',{month:'long'});
+  alert('Monthly view (placeholder): ' + month + ' — use Export JSON for full data.');
+};
+$('#btnTPrint').onclick = ()=> window.print();
+
+/* Teacher — Leaves */
+$('#btnTLeave').onclick = ()=>{
+  if (!session.logged || session.user.role!=='teacher') return;
+  const from=$('#tLeaveFrom').value, to=$('#tLeaveTo').value, reason=$('#tLeaveReason').value;
+  if (!from || !to){ alert('Select dates'); return; }
+  db.leaves.push({id:uid('lv'), userId:session.user.id, role:'teacher', from, to, reason, status:'pending'});
+  saveDB(db); renderTeacherLeaves(); renderLeavesAdmin();
+};
+function renderTeacherLeaves(){
+  const tb = $('#tLeaveTable'); tb.innerHTML='';
+  db.leaves.filter(l=>l.userId===session.user.id).slice().reverse()
+    .forEach(L=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${L.from}</td><td>${L.to}</td><td>${L.reason}</td>
+        <td>${L.status}</td>`;
+      tb.appendChild(tr);
+    });
+}
+
+/* ===========================
+   STUDENT DASHBOARD
+   =========================== */
+function mountStudent(){
+  if (!session.logged || session.user.role!=='student'){ show('login'); return; }
+  $('#stuWelcome').textContent = `Welcome, ${session.user.name}`;
+  // profile
+  const s = session.user;
+  $('#stuProfile').innerHTML = `
+    <div class="row"><span class="pill">Name: <b>${s.name}</b></span></div>
+    <div class="row" style="margin-top:6px">
+      <span class="pill">Email: ${s.email}</span>
+      <span class="pill">Class: ${s.class||'-'}</span>
+      <span class="pill">Roll: ${s.roll||'-'}</span>
+      <span class="pill">ID: ${s.id}</span>
+    </div>`;
+  // fees
+  renderStudentFees();
+  // attendance
+  renderStudentAtt();
+  // leaves
+  renderStudentLeaves();
+  // notices
+  renderStudentNotices();
+  // achievements
+  renderStudentAchievements();
+}
+
+/* Student — Fees */
+function renderStudentFees(){
+  const s = session.user;
+  const f = db.fees[s.id] || {totalCurr:0,totalLast:0,paid:0};
+  const due = Math.max(0,(f.totalCurr||0)-(f.paid||0));
+  $('#stuFees').innerHTML = `
+    <div>Total (This Year): <b>₹${f.totalCurr||0}</b></div>
+    <div>Paid: <b>₹${f.paid||0}</b></div>
+    <div>Due: <b class="${due>0?'danger':'ok'}">₹${due}</b></div>
+    <div class="small muted" style="margin-top:6px">Last Year Total: ₹${f.totalLast||0}</div>`;
+}
+
+/* Student — Attendance */
+function renderStudentAtt(){
+  const tb = $('#stuAttTable'); tb.innerHTML='';
+  const sid = session.user.id;
+  db.attendance.filter(a=>a.userId===sid).slice().reverse().forEach(a=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${a.date}</td><td>${a.status}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* Student — Leaves */
+$('#btnSLeave').onclick = ()=>{
+  if (!session.logged || session.user.role!=='student') return;
+  const from=$('#sLeaveFrom').value, to=$('#sLeaveTo').value, reason=$('#sLeaveReason').value;
+  if (!from || !to){ alert('Select dates'); return; }
+  db.leaves.push({id:uid('lv'), userId:session.user.id, role:'student', from, to, reason, status:'pending'});
+  saveDB(db); renderStudentLeaves(); renderLeavesAdmin();
+};
+function renderStudentLeaves(){
+  const tb = $('#sLeaveTable'); tb.innerHTML='';
+  db.leaves.filter(l=>l.userId===session.user.id).slice().reverse()
+    .forEach(L=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${L.from}</td><td>${L.to}</td><td>${L.reason}</td><td>${L.status}</td>`;
+      tb.appendChild(tr);
+    });
+}
+
+/* Student — Notices (general + student) */
+function renderStudentNotices(){
+  const list = db.notices.filter(n=> n.type==='general' || n.type==='student')
+    .slice().reverse().map(n=>`<div class="row" style="padding:6px 0;border-bottom:1px dashed var(--border)">
+      <div><b>[${n.type}]</b> ${n.title}</div><div class="right small muted">${n.date}</div>
+    </div>`).join('') || '<div class="small muted">No notices</div>';
+  $('#stuNotices').innerHTML = list;
+}
+
+/* Student — Achievements */
+function renderStudentAchievements(){
+  const sid = session.user.id;
+  const arr = (db.achievements[sid]||[]);
+  $('#stuAchievements').innerHTML = arr.map(a=>`<div class="row" style="padding:6px 0;border-bottom:1px dashed var(--border)">
+    <div>🏅 <b>${a.title}</b></div><div class="right small muted">${a.when||''}</div>
+  </div>`).join('') || '<div class="small muted">No achievements yet.</div>';
+}
+
+/* If a student profile edited while student screen is open, refresh */
+function renderStudentIfViewing(id){
+  if (session.logged && session.user.role==='student' && session.user.id===id){
+    // refresh cached session.user from db
+    const fresh = db.users.find(u=>u.id===id); if (fresh){ session.user = fresh; saveSession(); }
+    mountStudent();
+  }
+}
+
+/* ===========================
+   MODALS / OVERLAY
+   =========================== */
+function openModal(html){
+  $('#modal').innerHTML = html;
+  $('#overlay').classList.add('open');
+}
+function closeModal(){
+  $('#overlay').classList.remove('open');
+  $('#modal').innerHTML='';
+}
+$('#overlay').addEventListener('click', (e)=>{ if (e.target.id==='overlay') closeModal(); });
+
+/* ===========================
+   STARTUP
+   =========================== */
+function start(){
+  renderHome();
+  renderDrawer();
+  renderRoleChip();
+  if (session.logged){
+    if (session.user.role==='admin') show('admin'); 
+    else if (session.user.role==='teacher') show('teacher'); 
+    else if (session.user.role==='student') show('student'); 
+    else show('home');
+  } else {
+    show('home');
+  }
+}
+start();
+
+/* ========= Public API (optional) ========= */
+window.__APP = Object.assign(window.__APP||{}, {
+  show, mountAdmin, mountTeacher, mountStudent, mountNotices, mountCalendar, mountGallery,
+  renderHome
+});
+</script>
+<script src="extras.js"></script>
+</body>
+</html>
