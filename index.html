@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Little Flower School — Online App</title>
+  <meta name="theme-color" content="#6b46c1"/>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body data-theme="dark">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo" id="logoBox" title="Editable by Admin">
+      <!-- placeholder logo -->
+      <svg width="36" height="36" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" fill="#f59e0b"></circle><rect x="5" y="13" width="14" height="6" rx="3" fill="#2563eb"></rect></svg>
+    </div>
+    <div>
+      <h1 id="appTitle">Little Flower School</h1>
+      <div class="sub muted small">Digital School — Portal</div>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <select id="themeSelect" title="Theme">
+      <option value="dark">🌙 Dark</option>
+      <option value="light">☀ Light</option>
+    </select>
+    <button class="btn outline" id="btnHome">Home</button>
+    <button class="btn accent" id="btnLoginNav">Login</button>
+    <button class="btn ghost" id="btnMenu">☰</button>
+  </div>
+</header>
+
+<main class="container" id="appRoot">
+  <!-- Home -->
+  <section id="homeScreen" class="screen">
+    <div class="card">
+      <div class="flex">
+        <div style="flex:1">
+          <div class="muted small">Welcome</div>
+          <h2 id="welcomeHeadline">Welcome to Little Flower School — Digital Portal</h2>
+          <div class="muted small" style="margin-top:6px">Login to access dashboards for Admin / Teacher / Student.</div>
+          <div style="margin-top:12px" class="flex">
+            <button class="btn accent" id="btnPrimaryLogin">Login</button>
+            <button class="btn outline" id="btnOpenCalendarHome">Calendar</button>
+          </div>
+        </div>
+
+        <div style="width:320px">
+          <div class="card small">
+            <div class="muted small">Upcoming</div>
+            <div id="homeNextEvent" style="margin-top:8px">Loading...</div>
+          </div>
+          <div class="card small" style="margin-top:10px">
+            <div class="muted small">Latest Notice</div>
+            <div id="homeNoticePreview" style="margin-top:8px">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><h3>Quick Modules</h3><div class="right muted small">Tap any module</div></div>
+      <div style="height:12px"></div>
+      <div class="modules" id="modulesGrid"></div>
+    </div>
+  </section>
+
+  <!-- Login -->
+  <section id="loginScreen" class="screen hidden">
+    <div class="card">
+      <div class="section-title"><h3>Login</h3><div class="muted small right">Use ID & password</div></div>
+      <div style="height:8px"></div>
+      <div class="flex">
+        <div style="flex:1">
+          <label class="muted small">User ID</label>
+          <input id="inputId" placeholder="e.g. admin or stu101"/>
+        </div>
+        <div style="width:220px">
+          <label class="muted small">Password</label>
+          <input id="inputPwd" type="password" placeholder="Password" />
+        </div>
+      </div>
+      <div style="margin-top:10px" class="flex">
+        <button class="btn accent" id="btnLogin">Login</button>
+        <button class="btn outline" id="btnCancelLogin">Back</button>
+        <button class="btn ghost right" id="btnForgot">Forgot Password</button>
+      </div>
+      <div class="muted small" style="margin-top:8px">Note: This demo uses DB-stored passwords. For production use Supabase Auth.</div>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashScreen" class="screen hidden">
+    <div class="card">
+      <div class="flex">
+        <div style="flex:1">
+          <div class="muted small">Dashboard</div>
+          <h2 id="dashTitle">—</h2>
+          <div id="dashRole" class="muted small">—</div>
+        </div>
+        <div class="right">
+          <div class="muted small">Signed in as</div>
+          <div id="signedUser" style="font-weight:700">—</div>
+          <div style="margin-top:8px" class="flex">
+            <button class="btn outline" id="btnDashHome">Home</button>
+            <button class="btn" id="btnLogout">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashModules"></div>
+  </section>
+
+  <!-- Module container -->
+  <section id="moduleScreen" class="screen hidden">
+    <div id="moduleContent"></div>
+  </section>
+
+</main>
+
+<!-- modal & toast roots -->
+<div id="modalRoot" class="hidden"></div>
+<div id="toastRoot"></div>
+
+<!-- Scripts (ES modules) -->
+<script type="module" src="scripts/supabase.js"></script>
+<script type="module" src="scripts/auth.js"></script>
+<script type="module" src="scripts/main.js"></script>
+
+</body>
+</html>
